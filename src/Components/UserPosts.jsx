@@ -2,25 +2,29 @@ import React from "react";
 import Post from "./Post";
 
 class UserPosts extends React.Component {
-
   render() {
     return (
       <div>
-        {this.props.user ?
+        {this.props.user ? (
           <div>
-            <h2>{this.props.user.displayName}'s  Posts</h2>
+            <h2>{this.props.user.displayName}'s Posts</h2>
             {this.props.userPosts.map(post => (
-              <Post post={post}
+              <Post
+                post={post}
                 key={post.id}
                 user={this.props.user}
                 editPost={this.props.editPost}
                 addLikes={this.props.addLikes}
                 addDislikes={this.props.addDislikes}
-                deletePost={this.props.deletePost} ></Post>
+                deletePost={this.props.deletePost}
+              />
             ))}
-          </div> : <div>
+          </div>
+        ) : (
+          <div>
             <h1>Please login to see your posts</h1>
-          </div>}
+          </div>
+        )}
       </div>
     );
   }
