@@ -27,7 +27,6 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    // this.firebaseEvents();
     this.fetchData();
     toastr.options = {
       positionClass: 'toast-top-right',
@@ -37,20 +36,25 @@ class App extends React.Component {
     auth.onAuthStateChanged(user => {
       if (user) {
         this.setState({ user });
-
       }
     });
+    this.firebaseEvents();
   }
-//   firebaseEvents() {
+  firebaseEvents() {
     
-// const functions = require('firebase-functions');
-
-// const admin = require('firebase-admin');
-// admin.initializeApp();
-// exports.updateRef = functions.database.ref('posts').onWrite((event) => {
-//   console.log(event)
-// });
-//   };
+    var ref = firebase.database().ref("posts");
+    ref.orderByChild('timestamp').on('child_added', function(snapshot) {
+      setTimeout(() => {
+        toastr.success(`${snapshot.val().user} has created a new post!`)
+      }, 300)
+    });
+    ref.orderByChild('timestamp').on('child_removed', function(snapshot) {
+      setTimeout(() => {
+        toastr.warning(`${snapshot.val().user} has deleted a post!`)
+      }, 300)
+  });
+  
+  };
 
   fetchData() {
     const postsRef = firebase.database().ref("posts");
@@ -75,6 +79,7 @@ class App extends React.Component {
       }
       this.setState({
         posts: newState
+        
       });
       this.getUserPosts();
     });
@@ -94,9 +99,7 @@ class App extends React.Component {
     }, 200)
 
 
-    setTimeout(() => {
-      toastr.success(`${this.state.user.displayName} has created a new post!`)
-    }, 300)
+
 
   };
 
@@ -106,9 +109,6 @@ class App extends React.Component {
     setTimeout(() => {
       this.fetchData();
     }, 200)
-    setTimeout(() => {
-      toastr.warning(`${this.state.user.displayName} has deleted a post!`)
-    }, 300)
 
   }
 
