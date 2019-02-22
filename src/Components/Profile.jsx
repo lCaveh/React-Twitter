@@ -15,13 +15,13 @@ class Profile extends React.Component {
             <img
               className="profileImg"
               src={this.props.user.photoURL}
-              alt="user image"
+              alt="user"
             />
             <p>{this.props.user.email}</p>
             <p>{this.props.user.uid}</p>
           </div>
         ) : (
-          <button onClick={this.props.handleLogin}>Log In</button>
+          <span>Guest image will go here...</span>
         )}
       </div>
     );
