@@ -8,6 +8,7 @@
     "@fortawesome/react-fontawesome": "^0.1.4",
     "bootstrap": "^4.3.1",
     "firebase": "^5.8.3",
+    "firebase-functions": "^2.2.0",
     "i": "^0.3.6",
     "npm": "^6.8.0",
     "re-base": "^4.0.0",
@@ -15,9 +16,11 @@
     "react-addons-css-transition-group": "^15.6.2",
     "react-dom": "^16.8.2",
     "react-icons": "^3.4.0",
+    "react-paginate": "^6.3.0",
     "react-router-dom": "^4.3.1",
     "react-scripts": "2.1.5",
-    "react-transition-group": "^2.5.3"
+    "react-transition-group": "^2.5.3",
+    "toastr": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",

@@ -9,6 +9,9 @@ import Header from "./Components/Header";
 import base from "./firebase";
 import firebase, { auth, provider } from "./firebase.js";
 
+import toastr from 'toastr';
+import "toastr/build/toastr.min.css";
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -24,8 +27,13 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+    // this.firebaseEvents();
     this.fetchData();
-    
+    toastr.options = {
+      positionClass: 'toast-top-right',
+      hideDuration: 300,
+      timeOut: 2000
+    }
     auth.onAuthStateChanged(user => {
       if (user) {
         this.setState({ user });
@@ -33,6 +41,16 @@ class App extends React.Component {
       }
     });
   }
+//   firebaseEvents() {
+    
+// const functions = require('firebase-functions');
+
+// const admin = require('firebase-admin');
+// admin.initializeApp();
+// exports.updateRef = functions.database.ref('posts').onWrite((event) => {
+//   console.log(event)
+// });
+//   };
 
   fetchData() {
     const postsRef = firebase.database().ref("posts");
@@ -70,12 +88,16 @@ class App extends React.Component {
     const postsRef = firebase.database().ref("posts");
     this.filter();
     postsRef.push(post);
-  
+
     setTimeout(() => {
       this.fetchData();
+    }, 200)
 
-    },200)
-   
+
+    setTimeout(() => {
+      toastr.success(`${this.state.user.displayName} has created a new post!`)
+    }, 300)
+
   };
 
   deletePost = post => {
@@ -83,16 +105,31 @@ class App extends React.Component {
     postRef.remove();
     setTimeout(() => {
       this.fetchData();
-    },200)
+    }, 200)
+    setTimeout(() => {
+      toastr.warning(`${this.state.user.displayName} has deleted a post!`)
+    }, 300)
+
+  }
+
+  editPost = post => {
+    const postRef = firebase.database().ref("posts/" + post.id);
+
+    postRef.update(post);
+    setTimeout(() => {
+      this.fetchData();
+    }, 200)
   }
 
   getUserPosts = () => {
-    let userPosts = this.state.posts.filter(
-      post => this.state.user.uid == post.userId
-    );
-    this.setState({
-      userPosts: userPosts
-    });
+    if (this.state.user) {
+      let userPosts = this.state.posts.filter(
+        post => this.state.user.uid == post.userId
+      );
+      this.setState({
+        userPosts: userPosts
+      });
+    }
   };
 
   addLikes = post => {
@@ -142,7 +179,7 @@ class App extends React.Component {
   };
 
   likedPosts = () => {
-    this.state.posts.sort(function(a, b) {
+    this.state.posts.sort(function (a, b) {
       return a.likes > b.likes ? -1 : b.likes > a.likes ? 1 : 0;
     });
     this.setState(this.state.posts);
@@ -150,7 +187,7 @@ class App extends React.Component {
   };
 
   dislikedPosts = () => {
-    this.state.posts.sort(function(a, b) {
+    this.state.posts.sort(function (a, b) {
       return a.dislikes > b.dislikes ? -1 : b.dislikes > a.dislikes ? 1 : 0;
     });
     this.setState(this.state.posts);
@@ -158,7 +195,7 @@ class App extends React.Component {
   };
 
   recentPosts = () => {
-    this.state.posts.sort(function(a, b) {
+    this.state.posts.sort(function (a, b) {
       return a.timeId > b.timeId ? -1 : b.timeId > a.timeId ? 1 : 0;
     });
     this.setState(this.state.posts);
@@ -201,24 +238,28 @@ class App extends React.Component {
           handleLogout={this.logout}
           posts={this.state.posts}
         />
-        <div className="container">
+        <div className="main-content">
           <div className="profileDiv">
             <Profile user={this.state.user} />
+            <PostForm addPost={this.addPost} user={this.state.user} />
           </div>
           <div className="postDiv">
-          <PostForm addPost={this.addPost} user={this.state.user} />
-          <UserPosts deletePost={this.deletePost} userPosts={this.state.userPosts}></UserPosts>
+
+
+            <UserPosts user={this.state.user} deletePost={this.deletePost} userPosts={this.state.userPosts} editPost={this.editPost} addLikes={this.addLikes} addDislikes={this.addDislikes}
+              addLikes={this.addLikes}></UserPosts>
           </div>
-          
-            <PostList
-              likedPosts={this.likedPosts}
-              dislikedPosts={this.dislikedPosts}
-              recentPosts={this.recentPosts}
-              addDislikes={this.addDislikes}
-              addLikes={this.addLikes}
-              posts={this.state.posts}
-              user={this.state.user}
-            />
+
+          <PostList
+            likedPosts={this.likedPosts}
+            dislikedPosts={this.dislikedPosts}
+            recentPosts={this.recentPosts}
+            addDislikes={this.addDislikes}
+            addLikes={this.addLikes}
+            posts={this.state.posts}
+            user={this.state.user}
+            perPage={5}
+          />
         </div>
       </div>
     );

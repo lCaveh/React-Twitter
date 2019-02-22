@@ -9,7 +9,7 @@ class Header extends React.Component {
     return (
       <div className="header bg-primary text-center text-white">
         <div className="login">
-          <h3>User Login</h3>
+          <h4>User Login</h4>
 
           {this.props.user ? (
             <div>

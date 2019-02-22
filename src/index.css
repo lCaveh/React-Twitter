@@ -20,8 +20,9 @@ code {
   margin-bottom: 20px;
 }
 
-.container {
+.main-content {
   display: grid;
+  grid-gap: 40px;
   grid-template-columns: 1fr 3fr 3fr;
 }
 
@@ -46,17 +47,40 @@ code {
   margin-left: 80px;
 }
 
+.postForm {
+  margin-top: 90px;
+  margin-left: 30px;
+}
+
 .form-group{
   margin-top: 20px;
   margin-bottom: 50px;
 }
 
+.profile {
+  margin-left: 30px;
+}
 .profileImg {
+  border-radius: 50%;
   max-width: 150px;
   max-height: 150px
 }
 
+.post-info {
+  color: darkblue;
+  font-size:12px;
+}
+
+.post-info-container{
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  grid-gap:50px;
+}
+
+
 .postImg {
+  margin-right:8px;
+  border-radius: 50%;
   max-width: 20px;
   max-height: 20px
 }
